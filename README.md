@@ -22,6 +22,11 @@ I have included a native sprig driver that allows you to sync/remove sprig model
 
 To use the sprig driver, simply specify the type as 'sprig' and register the module as a sprig model object.
 
+#### Jelly
+Jelly driver that allows you to sync/remove sprig models from the database is also included.
+
+To use the jelly driver, specify the type as 'jelly' and register the module as a jelly model object.
+
 ### Interfaced
 If you've used the migratable interface, then your model will not need a driver to extract the database modelling information out of it.
 
