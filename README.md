@@ -23,7 +23,7 @@ I have included a native sprig driver that allows you to sync/remove sprig model
 To use the sprig driver, simply specify the type as 'sprig' and register the module as a sprig model object.
 
 #### Jelly
-Jelly driver that allows you to sync/remove sprig models from the database is also included.
+Jelly driver that allows you to sync/remove jelly models from the database is also included.
 
 To use the jelly driver, specify the type as 'jelly' and register the module as a jelly model object.
 
@@ -96,18 +96,18 @@ Below is a basic example of how the migratable interface would be setup using an
 
 	class Model_MyModel extends ORM implements Model_Migratable 	{
 		
-		public function get_database() { }
+		public function db() {} // the function was previously named get_database() 
 
-		public function get_tables() { }
+		public function migration_tables() { } // the function was previously named get_tables()
 		
 	}
 
 #### Abstract Methods
 These are methods you will need to have working in your model.
 
-`get_database()` This method will return a Database object of the database used by the model.
+`db()` This method will return a Database object of the database used by the model.
 
-`get_tables()` Returns an array of tables modelled by the model, if the table is part of a ManyToMany relationship then it would need to return both the pivot table and itself.
+`migration_tables()` Returns an array of tables modelled by the model, if the table is part of a ManyToMany relationship then it would need to return both the pivot table and itself.
 
 ### The Driver Method
 
@@ -125,9 +125,9 @@ Your driver must extend the migration class, containing some abstract methods th
 
 	class Migration_Driver extends Migration {
 		
-		protected function _get_model($name) { }
-		protected function _get_database() { }
-		protected function _get_tables() { }
+		protected function _model($name) { }
+		protected function _db() { }
+		protected function _tables() { }
 
 	} // End Migration_Driver
 
@@ -135,8 +135,8 @@ Your driver must extend the migration class, containing some abstract methods th
 
 These are abstract methods defined in the migration class which you must extend in your driver.
 
-* `_get_model($model)` This method returns the model object from a given identifier or name. It would be wise to check if the model parameter is already given as an object.
+* `_model($model)` This method returns the model object from a given identifier or name. It would be wise to check if the model parameter is already given as an object.
 
-* `_get_database()` This method is important for extracting the database associated with the model. If your model doesnt support this, then just return `Database::instance();`.
+* `_db()` This method is important for extracting the database associated with the model. If your model doesnt support this, then just return `Database::instance();`.
 
-* `_get_tables()` This is the main method, which involves converting your model object into an array of Database_Table objects. For further information on the Database_Table API, see the DBForge documentation. Also see the sprig driver for an example.
+* `_tables()` This is the main method, which involves converting your model object into an array of Database_Table objects. For further information on the Database_Table API, see the DBForge documentation. Also see the sprig driver for an example.
