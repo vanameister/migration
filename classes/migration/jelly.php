@@ -160,7 +160,7 @@ class Migration_Jelly extends Migration {
 	{
 		// Jelly::db() returns the database name as a string.
 		// print_r($this->_model);
-		return Database::instance($this->_model->db);
+		return Database::instance($this->_model->db());
 	}
 
 	/**
