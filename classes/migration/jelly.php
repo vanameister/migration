@@ -2,7 +2,7 @@
 /**
  * Jelly migration driver.
  *
- * The code draws heavily from Migration_Sprig module, writtn by
+ * The code draws heavily from Migration_Sprig module, written by
  * Oliver Morgan.
  *
  *
@@ -66,7 +66,6 @@ class Migration_Jelly extends Migration {
 				foreach ($field->columns() as $column)
 				{
 					// Add the column to the table
-					// echo "yks-";
 					$table->add_column($column);
 				}
 			}
@@ -87,7 +86,6 @@ class Migration_Jelly extends Migration {
 				foreach ($this->_columns($field, $table) as $column)
 				{
 					// Add the column to the table
-					// echo "kaks-";
 					$table->add_column($column);
 				}
 			}
@@ -95,7 +93,6 @@ class Migration_Jelly extends Migration {
 			// We can also process ManyToMany Fields that aren't
 			elseif ($field instanceof Jelly_Field_ManyToMany)
 			{
-			//	echo"<pre>"; print_r($field);
 				// ManyToMany fields also contain a pivot table
 				$pivot = new Database_Table($field->through['model'], $this->_db);
 
@@ -138,6 +135,14 @@ class Migration_Jelly extends Migration {
 				$pivot->add_constraint(new Database_Constraint_Primary(
 					array_keys($pivot->columns()), $pivot->name
 				));
+				
+				/**
+				 * @todo It would be more than appropriate to add a contstraint in a following 
+				 * form into a database:
+							ALTER TABLE `roles_users`
+						  ADD CONSTRAINT `roles_users_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+				 * 
+				 */
 
 				// Add the pivot table to the list of tables
 				$tables[] = $pivot;
@@ -158,8 +163,7 @@ class Migration_Jelly extends Migration {
 
 	protected function _db()
 	{
-		// Jelly::db() returns the database name as a string.
-		// print_r($this->_model);
+		// Returns the database name as a string.
 		return Database::instance($this->_model->db());
 	}
 
@@ -198,7 +202,9 @@ class Migration_Jelly extends Migration {
 				// Create a new database column
 				$column = Database_Column::factory('varchar');
 				// Set the varchar's max length to a default of 64
-				// echo($field->rules['max_length']);
+				
+				// @todo More appropriate would be to check length before...
+				
 				if(($field instanceof Jelly_Field_Email) OR ($field instanceof Jelly_Field_Slug))
 				{
 					$column->max_length = 255;
@@ -207,6 +213,8 @@ class Migration_Jelly extends Migration {
 				{
 					$column->max_length = 255;
 				} 
+				
+				// @todo What is Jelly rules syntax? Is it in array or not?
 				elseif (empty($field->rules['max_length'][0]))
 				{
 					$column->max_length = 64;
@@ -278,6 +286,14 @@ class Migration_Jelly extends Migration {
 				$column->name = $field->column;
 				if (!empty($field->default)) $column->default = $field->default;
 				if (!empty($field->null)) $column->nullable = (bool)$field->null;
+				
+				/**
+				 * @todo It would be appropriate to add a contstraint :
+							ALTER TABLE `roles_users`
+						  ADD CONSTRAINT `roles_users_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+				 * 
+				 */
+				
 				return array($column);
 				break;
 			default:
