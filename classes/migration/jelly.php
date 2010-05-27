@@ -205,7 +205,7 @@ class Migration_Jelly extends Migration {
 				} 
 				elseif ($field instanceof Jelly_Field_Password)
 				{
-					$column->max_length = 40;
+					$column->max_length = 255;
 				} 
 				elseif (empty($field->rules['max_length'][0]))
 				{
